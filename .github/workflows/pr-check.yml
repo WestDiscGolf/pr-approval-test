@@ -1,0 +1,32 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches:
+      - main  # or any branch you want to protect
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run custom checks
+        run: |
+          echo "Running custom checks..."
+          
+          # Example check: Ensure no TODO comments in the code
+          if grep -rnw 'TODO' .; then
+            echo "TODO comments found. Please resolve them before merging."
+            exit 1
+          fi
+
+          # Example check: Ensure no debug statements in the code
+          if grep -rnw 'console.log' .; then
+            echo "Debug statements (console.log) found. Please remove them before merging."
+            exit 1
+          fi
+
+          echo "All checks passed!"
